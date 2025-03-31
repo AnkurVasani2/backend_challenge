@@ -1,6 +1,7 @@
 # **SQL Query Generator API**
 
 #### Render Link: https://backend-challengege.onrender.com
+#### [Postman Collection File](https://ankur-team.postman.co/workspace/Ankur-Team-Workspace~c55a835e-3204-4c03-8f36-44dd73f76f9e/collection/40041981-22d518f7-9b86-4c23-b906-53b57037ffb8?action=share&creator=40041981)
 
 ## API Documentation
 
@@ -18,7 +19,8 @@ This project provides an API that allows you to:
    ```json
    {
      "query": "What is the average salary of employees in the HR department?"
-   }```
+   }
+   ```
 ### Response Example:
 ```bash 
 {
