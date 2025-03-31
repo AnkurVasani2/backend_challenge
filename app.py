@@ -64,7 +64,10 @@ def init_in_memory_db():
         ("Deepak Mishra", 27, "Design", 58000, 3, "Indore")
     ]
     for emp in employees:
-        cursor.execute("INSERT INTO employees (name, age, department, salary, experience, city) VALUES (?, ?, ?, ?, ?, ?)", emp)
+        cursor.execute(
+            "INSERT INTO employees (name, age, department, salary, experience, city) VALUES (?, ?, ?, ?, ?, ?)",
+            emp
+        )
     conn.commit()
     cursor.close()
     return conn
@@ -73,7 +76,10 @@ def init_in_memory_db():
 in_memory_conn = init_in_memory_db()
 
 def get_sql_response(sql_query):
-    """Execute the SQL query on the in-memory DB. If a common naming error occurs, attempt a correction."""
+    """
+    Execute the SQL query on the in-memory DB.
+    If a common naming error occurs, attempt a simple correction.
+    """
     try:
         cursor = in_memory_conn.cursor()
         cursor.execute(sql_query)
@@ -144,12 +150,22 @@ def query_api():
         except Exception as e:
             return jsonify({"error": f"Error parsing function call arguments: {e}"}), 500
     else:
-        cleaned_output = clean_sql_text(response.text)
-        return jsonify({
-            "query": query_text,
-            "output": cleaned_output,
-            "message": "No function call was made by Gemini."
-        })
+        cleaned_sql = clean_sql_text(response.text)
+        # If the plain output appears to be a SQL query, try to execute it
+        if cleaned_sql.upper().startswith(("SELECT", "INSERT", "UPDATE", "DELETE", "CREATE", "DROP")):
+            result = get_sql_response(cleaned_sql)
+            return jsonify({
+                "query": query_text,
+                "generated_sql": cleaned_sql,
+                "result": result,
+                "message": "Query processed successfully from plain output."
+            })
+        else:
+            return jsonify({
+                "query": query_text,
+                "output": cleaned_sql,
+                "message": "No function call was made by Gemini."
+            })
 
 if __name__ == '__main__':
     app.run(debug=True)
