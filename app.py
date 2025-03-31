@@ -122,7 +122,7 @@ def validate_api():
         return jsonify({"error": "No SQL query provided"}), 400
     
     sql_query = clean_sql_text(data["query"])
-    response = client.models.generate_content(model="gemini-2.0-flash", contents=f"Validate this SQL query and give a clear validation message: {sql_query}")
+    response = client.models.generate_content(model="gemini-2.0-flash", contents=f"Validate this SQL query and give a clear 2 sentence validation message: {sql_query}")
     validation_message = response.text.strip() if response.text else "Validation completed with no issues."
     return jsonify({"query": sql_query, "validation_message": validation_message})
 
@@ -133,7 +133,7 @@ def explain_api():
         return jsonify({"error": "No SQL query provided"}), 400
     
     sql_query = clean_sql_text(data["query"])
-    response = client.models.generate_content(model="gemini-2.0-flash", contents=f"Explain this SQL query in detail: {sql_query}")
+    response = client.models.generate_content(model="gemini-2.0-flash", contents=f"Explain this SQL query in detail in atmost 5 sentences without  \n's : {sql_query}")
     explanation = response.text.strip() if response.text else "Explanation generated."
     return jsonify({"query": sql_query, "explanation": explanation})
 
