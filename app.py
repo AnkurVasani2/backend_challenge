@@ -126,7 +126,17 @@ def query_api():
 
     response = client.models.generate_content(
         model="gemini-2.0-flash",
-        contents=query_text,
+        contents=query_text+""" following is the schema
+        CREATE TABLE employees (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            age INTEGER,
+            department TEXT,
+            salary REAL,
+            experience INTEGER,
+            city TEXT
+        )
+    """,
         config=config
     )
 
