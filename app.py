@@ -4,6 +4,8 @@ import sqlite3
 from flask import Flask, request, jsonify
 from google import genai
 from google.genai import types
+from dotenv import load_dotenv
+
 sql_function = {
     "name": "get_sql_response",
     "description": "Converts a natural language query to a SQL statement and executes it on the SQLite database 'employees.db'.",
@@ -48,7 +50,7 @@ def query_api():
         return jsonify({"error": "No query provided"}), 400
 
     query_text = data['query']
-    client = genai.Client(api_key="AIzaSyBGlLAqu04aJ9Bo5E2QsDG_2mjsa0yugO8")
+    client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
     tools = types.Tool(function_declarations=[sql_function])
     config = types.GenerateContentConfig(tools=[tools])
 
